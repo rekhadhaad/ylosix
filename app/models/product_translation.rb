@@ -23,6 +23,7 @@ class ProductTranslation < ActiveRecord::Base
   belongs_to :product
   belongs_to :language, primary_key: :locale, foreign_key: :locale
   after_initialize :load_features
+  before_validation :generate_slug
 
   private
 
@@ -38,5 +39,18 @@ class ProductTranslation < ActiveRecord::Base
     end
   end
 
+
+  def generate_slug
+    count = 0
+      @slug = ProductTranslation.where(:slug => self.slug).first
+      if !self.class.maximum('id').nil?
+        count = self.class.maximum("id") + 1 || 1
+      end
+
+      if !@slug.blank?
+        self.slug = slug.parameterize
+        self.slug = "#{slug.parameterize}_#{count}"
+      end
+  end
   # validates_uniqueness_of locale: { scope: :category_id }
 end

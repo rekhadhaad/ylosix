@@ -1,27 +1,26 @@
-sqlite: &sqlite
-  adapter: sqlite3
-  database: db/<%= Rails.env %>.sqlite3
-
-postgresql: &postgresql
-  adapter: postgresql
-  min_messages: ERROR
-  reconnect: false
-
 default: &default
+  adapter: postgresql
+  username: postgres
+  password: 123
   pool: 5
   timeout: 5000
-  encoding: utf8
-  <<: *postgresql
+  encoding: unicode
+  host: localhost
 
 development:
-  url: postgres://ecommerce_user:ecommerce_pass@localhost:5432/ecommerce
   <<: *default
+
+  database: ylosix_development
 
 test:
-  url: postgres://ecommerce_user:ecommerce_pass@localhost:5432/ecommerce_test
   <<: *default
+  database: ylosix_test
 
-# Example URL => postgres://pgusername@localhost/development_db
+# Do not keep production credentials in the repository,
+# instead read the configuration from the environment.
+#
+# Example:
+#   sqlite3://myuser:mypass@localhost/full/path/to/somedatabase
+#
 production:
-  url: <%= ENV['DATABASE_URL'] %>
-  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
